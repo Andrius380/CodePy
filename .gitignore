@@ -3,3 +3,4 @@ virus_total_scan_results.json
 /files
 /venv
 .key_preview.txt
+/__pycache__
