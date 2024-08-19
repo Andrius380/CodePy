@@ -5,8 +5,7 @@ A simple and cool command-line antivirus tool, designed to run on Linux systems.
 ## How to Use
 
 
-```bash
-python3 -m venv venv```
+```python3 -m venv venv```
 
 ```source venv/bin/activate```
 
