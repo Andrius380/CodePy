@@ -5,7 +5,8 @@ A simple and cool command-line antivirus tool, designed to run on Linux systems.
 ## How to Use
 
 
-```python3 -m venv venv```
+```bash
+python3 -m venv venv```
 
 ```source venv/bin/activate```
 
@@ -17,4 +18,4 @@ A simple and cool command-line antivirus tool, designed to run on Linux systems.
 
 ```python3 main.py```
 
-# Run all these commands. Then add API token to .key.txt and add files to files directory & enjoy free CLI antivirus! 
+### Run all these commands. Then add API token to .key.txt and add files to files directory & enjoy free CLI antivirus! 
