@@ -2,6 +2,7 @@ import os
 import requests
 import time
 import json
+from typing import List, Optional, Dict, Union
 
 with open('.key.txt', 'r') as key_file:
     API_KEY = key_file.read().strip()
@@ -13,7 +14,7 @@ HEADERS = {
     'x-apikey': API_KEY
 }
 
-def upload_file(file_path):
+def upload_file(file_path: str) -> Optional[str]:
     with open(file_path, 'rb') as file:
         response = requests.post(SCAN_URL, headers=HEADERS, files={'file': file})
     if response.status_code == 200:
@@ -23,7 +24,7 @@ def upload_file(file_path):
         print(f"klaida įkeliant failą {file_path}: {response.status_code} {response.text}")
         return None
 
-def get_report(analysis_id):
+def get_report(analysis_id: str) -> Optional[Dict[str, Union[Dict, str]]]:
     response = requests.get(f"{REPORT_URL}{analysis_id}", headers=HEADERS)
     if response.status_code == 200:
         return response.json()
@@ -31,7 +32,7 @@ def get_report(analysis_id):
         print(f"Serverio klaida {analysis_id}: {response.status_code} {response.text}")
         return None
 
-def select_files_to_scan(files_directory):
+def select_files_to_scan(files_directory: str) -> List[str]:
     files = os.listdir(files_directory)
     files = [f for f in files if os.path.isfile(os.path.join(files_directory, f))]
     
@@ -54,7 +55,7 @@ def select_files_to_scan(files_directory):
 
     return selected_files
 
-def scan_selected_files(directory_path, selected_files, output_file):
+def scan_selected_files(directory_path: str, selected_files: List[str], output_file: str) -> bool:
     results = []
     malicious_found = False
 
@@ -63,10 +64,10 @@ def scan_selected_files(directory_path, selected_files, output_file):
         print(f"Skanuojamas failas: {file_path}")
         analysis_id = upload_file(file_path)
         if analysis_id:
-            for i in range(45, 0, -1):
-                print(f"Laukiama kol bus baigta failo analizė... Liko {i} sekundės ", end='\r')
+            for i in range(60, 0, -1):
+                print(f"Laukiama kol bus baigta failo analizė... Liko sekundžių {i} ", end='\r')
                 time.sleep(1)
-            print("Laukiama kol bus baigta failo analizė... Baigta!               ")  
+            print("Laukiama kol bus baigta failo analizė... Baigta!")  
             report = get_report(analysis_id)
             if report:
                 data = report.get('data', {})
@@ -98,8 +99,6 @@ def scan_selected_files(directory_path, selected_files, output_file):
         print("\033[91mAptikti kenksmingi failai, patikrinkite ataskaita!\033[0m")
     else:
         print("\033[92mKenksmingų failų nerasta.\033[0m")
-
-    
     return malicious_found
 
 if __name__ == "__main__":
